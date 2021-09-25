@@ -60,7 +60,7 @@ def adv_renamer(src_dir, dst_dir, words):
         try: 
             os.rename(src, dst)
         except:
-            print("Error: \n Source: " + src + "\nDestination: " + dst)
+            print("Error: \nSource: " + src + "\nDestination: " + dst)
 
 
 adv_renamer(source_dir, destination_dir)
