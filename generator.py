@@ -1,12 +1,11 @@
-from random import random
 import PySimpleGUI as sg
-from PySimpleGUI.PySimpleGUI import Checkbox
 import json
-import itertools
 import random
+import os
 
-def init_data():
-    load_data()
+def init_data(filename):
+    if filename != "":
+        load_data(filename)
 
 def add_string_to_data(string_to_add):
     if string_to_add != "":
@@ -31,25 +30,26 @@ def delete_tag_from_string(tag_to_delete, string_to_use):
     except (KeyError, ValueError):
         pass
 
-def save_data():
-    clean_data()
-    with open(filename, 'w+') as json_file:
-        json_file.write(json.dumps(data))
+def save_data(filename):
+    if filename != "":
+        clean_data()
+        with open(filename, 'w+') as json_file:
+            json_file.write(json.dumps(data, indent=4))
 
-def load_data():
-    try:
+def load_data(filename):
+    try:    
         with open(filename, 'r') as json_file:
             global data
             data = json.load(json_file)
     except FileNotFoundError:
-        save_data()
+        save_data(filename)
 
 def clean_data():
     for name in list(data.keys()):
         data[name] = sorted(list(data.fromkeys(data[name])))
 
 ### GUI
-def init_gui():
+def init_gui(filename):
     sg.theme('DarkGrey5')
 
     settings_column = [
@@ -101,6 +101,11 @@ def init_gui():
         [],
         [sg.Button('AddEntry',size=(12,2)), sg.Button('AddTag',size=(12,2))],
         [sg.Button('DeleteEntry',size=(12,2)), sg.Button('DeleteTag',size=(12,2))],
+        [sg.Text("Database: ", font=("Arial", 15))],
+        [sg.Text("Current database: ")],
+        [sg.Text(filename, key="selected_db")],
+        [sg.Text("Choose Database: ")],
+        [sg.Input(key="input_select_db", visible=False, enable_events=True), sg.FileBrowse(key="input_new_database")],
     ]
 
     layout = [
@@ -117,26 +122,30 @@ def init_gui():
 
     ### Setting Window
     global window
-    window = sg.Window('Name Generator', layout)# size=(1280,720))
+    window = sg.Window('Name Generator', layout)
 
     ### Showing the Application and GUI functions
 
     while True:
         global event
         global values
+        global filename_string
         event, values = window.read()
         if event == sg.WIN_CLOSED or event=="Exit":
-            save_data()
+            save_data(filename_string)
             break
         elif event == "Generate":
             text = window["textbox"]
             output = get_output()
-            # output = "".join([str(elem)+"\n" for elem in values])
             text.update(output)
         elif event == "DisplayDB":
             text = window["textbox"]
-            output = json.dumps(data)
+            output = json.dumps(data, indent=4)
             text.update(output)
+        elif event == "input_select_db":
+            filename_string = values["input_new_database"]
+            window["selected_db"].update(filename_string)
+            load_data(filename_string)
         elif event == "AddEntry":
             add_string_to_data(values["input_entry"].lower())
         elif event == "DeleteEntry":
@@ -216,12 +225,12 @@ def get_output():
 
 ### Definitions
 data = {}
-filename = "E:\programming\github\stuff\generator_db.txt"
+filename_string = "E:\programming\github\stuff\generator_db.txt"
 
 try:
-    init_data()
-    init_gui()
+    init_data(filename_string)
+    init_gui(filename_string)
 except Exception as ex:
     print(ex)
-    save_data()
+    save_data(filename_string)
     window.close()
