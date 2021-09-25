@@ -63,7 +63,6 @@ def init_gui():
         [sg.Radio("Any", "RADIO_TOPIC", default=True, key="RADIO_TOPIC_ANY")],
         [sg.Radio("First Name", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_FIRSTNAME")],
         [sg.Radio("Last Name", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_LASTNAME")],
-        [sg.Radio("First and Last Name", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_FIRSTANDLASTNAME")],
         [sg.Radio("City", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_CITY")],
         [sg.Radio("Country", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_COUNTRY")],
         [sg.Radio("Planet", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_PLANET")],
@@ -82,7 +81,7 @@ def init_gui():
         [sg.Text("Starts with:")],
         [sg.In(key="input_starts_with", size=(25,2))],
         [sg.Text("Contains:")],
-        [sg.In(key="input_contains_with", size=(25,2))],
+        [sg.In(key="input_contains", size=(25,2))],
         [sg.Text("Ends with:")],
         [sg.In(key="input_ends_with", size=(25,2))],
         [sg.Button('DisplayDB',size=(20,3))],
@@ -160,6 +159,7 @@ def get_amount():
     return output
 
 def get_output():
+    ### TODO: find better alternative to manage the output list to remove element during iteration instead of iterating data repeatedly
     output = list(data.keys())
     # Language filter
     if values["RADIO_LANGUAGE_ANY"] == False:
@@ -197,7 +197,21 @@ def get_output():
                     # Already removed from list output
                     pass
     # Contains filter
-
+    for name in list(data.keys()):
+        if ((values["input_starts_with"] != "" and
+            name.startswith(values["input_starts_with"]) == False) or
+            (values["input_ends_with"] != "" and
+            name.endswith(values["input_ends_with"]) == False) or
+            (values["input_contains"] != "" and
+            (values["input_contains"] in name) == False)):
+                try:
+                    output.remove(name)
+                except ValueError:
+                    # Already removed from list output
+                    pass
+    # Reducing to amount by randomly removing names
+    for i in range(len(output)-get_amount()):
+        output.pop(random.randint(0, len(output)-1))
     return '\n'.join(elem for elem in output)
 
 ### Definitions
