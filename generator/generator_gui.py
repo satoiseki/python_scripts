@@ -5,9 +5,8 @@ import generator_dictionary as gd
 
 # Definitions
 str_dict = str.maketrans("\n ", ",,")
-filename_string = "E:\programming\github\python_scripts\generator\generator_db.txt"
+filename_string = "E:\programming\github\python_scripts\genertor\generator_db.txt"
 
-### GUI
 def init_gui(filename):
     sg.theme('DarkGrey5')
 
@@ -17,7 +16,10 @@ def init_gui(filename):
         [sg.Combo(list(gd.language_list), default_value=gd.language_list[0], size=(20,1), readonly=True, enable_events=False, key="LANGUAGE_DROPDOWN")],
         [sg.Text("Name by topic: ", font=("Arial", 12))],
         [sg.Combo(list(gd.topic_list), default_value=gd.topic_list[0], size=(20,1), readonly=True, enable_events=False, key="TOPIC_DROPDOWN")],
-        [sg.Radio("Female", "FEMALE_VS_MALE", default=True, key="FIRST_NAME_FEMALE"), sg.Radio("Male", "FEMALE_VS_MALE", default=False, key="FIRST_NAME_MALE")],
+        [
+            sg.Radio("Female", "FEMALE_VS_MALE", default=True, key="FIRST_NAME_FEMALE"), 
+            sg.Radio("Male", "FEMALE_VS_MALE", default=False, key="FIRST_NAME_MALE")
+        ],
         [sg.Button('Generate',size=(20,3))],
     ]
 
@@ -84,8 +86,6 @@ def init_gui(filename):
         global event
         global values
         global filename_string
-        global str_dict
-
         event, values = window.read()
 
         if event == sg.WIN_CLOSED:
@@ -120,14 +120,6 @@ def init_gui(filename):
         
     window.close()
     ### END GUI
-
-def get_amount():
-    output = 0
-    for key in values:
-        if "RADIO_AMOUNT_" in str(key):
-            if values[key] == True:
-                return int(key.split('_')[-1])
-    return output
 
 def get_output():
     ### TODO: find better alternative to manage the output list to remove element during iteration instead of iterating data repeatedly
@@ -176,27 +168,21 @@ def get_output():
                 except ValueError:
                     # Already removed from list output
                     pass
+    # Get number of items to display
+    to_display = 0
+    for key in values:
+        if "RADIO_AMOUNT_" in str(key):
+            if values[key] == True:
+                to_display = int(key.split('_')[-1])
     # Reducing to amount by randomly removing names
-    for i in range(len(output)-get_amount()):
+    for i in range(len(output)-to_display):
         output.pop(random.randint(0, len(output)-1))
+    # Return left over output list
     return '\n'.join(elem for elem in output)
 
-def init():
+if __name__ == '__main__':
     try:
         gd.load_data(filename_string)
         init_gui(filename_string)
     except Exception as ex:
         print(ex)
-
-def main():
-    #parser = argparse.ArgumentParser()
-    #parser.add_argument('-h', '--help', '--HELP')
-    #parser.add_argument('-v', dest='verbose', action='store_true')
-    #args = parser.parse_args()
-    #print(args)
-    # ... do something with args.output ...
-    # ... do something with args.verbose ..
-    init()
-
-if __name__ == '__main__':
-    main()

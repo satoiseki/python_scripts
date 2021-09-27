@@ -41,13 +41,16 @@ def delete_tag_from_string(tags_to_delete, strings_to_use):
 
 def save_data(filename):
     if filename != "":
-        clean_data()
-        with open(filename, 'w+') as json_file:
-            json_file.write(json.dumps(data, indent=4))
+        try:
+            clean_data()
+            with open(filename, 'w+') as json_file:
+                json_file.write(json.dumps(data, indent=4))
+        except FileNotFoundError:
+            pass
 
 def load_data(filename):
     if filename != "":
-        try:    
+        try:
             with open(filename, 'r') as json_file:
                 global data
                 data = json.load(json_file)
@@ -62,11 +65,3 @@ def clean_data():
 
 def get_dictionary_dump():
     return json.dumps(data, indent=4)
-
-## main
-
-def main():
-    print("main")
-
-if __name__ == "__main__":
-    main()
