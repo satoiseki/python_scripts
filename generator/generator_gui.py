@@ -1,11 +1,10 @@
 import PySimpleGUI as sg
-import argparse
 import random
 import generator_dictionary as gd
 
 # Definitions
 str_dict = str.maketrans("\n ", ",,")
-filename_string = "E:\programming\github\python_scripts\genertor\generator_db.txt"
+filename_string = "E:\programming\github\python_scripts\generator\generator_db.txt"
 
 def init_gui(filename):
     sg.theme('DarkGrey5')
