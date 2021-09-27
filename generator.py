@@ -4,6 +4,7 @@ import random
 import os
 
 def init_data(filename):
+    # TODO: possible exception with different data types / invalid filenames
     if filename != "":
         load_data(filename)
 
@@ -70,6 +71,7 @@ def init_gui(filename):
         [sg.Text("Name by topic: ", font=("Arial", 12))],
         [sg.Radio("Any", "RADIO_TOPIC", default=True, key="RADIO_TOPIC_ANY")],
         [sg.Radio("First Name", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_FIRSTNAME")],
+        # [sg.Checkbox("Female", key="FIRST_NAME_FEMALE"), sg.Checkbox("Male", key="FIRST_NAME_MALE")],
         [sg.Radio("Last Name", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_LASTNAME")],
         [sg.Radio("City", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_CITY")],
         [sg.Radio("Country", "RADIO_TOPIC", default=False, key="RADIO_TOPIC_COUNTRY")],
@@ -187,6 +189,7 @@ def get_amount():
 
 def get_output():
     ### TODO: find better alternative to manage the output list to remove element during iteration instead of iterating data repeatedly
+    # TODO: add tags/filter for male/female for topic 'firstname'
     output = list(data.keys())
     # Language filter
     if values["RADIO_LANGUAGE_ANY"] == False:
