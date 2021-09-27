@@ -6,49 +6,68 @@
         "japanese"
     ],
     "morita": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "nakashima": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "matsumura": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "kobayashi": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "ishida": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "uchida": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "nishida": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "kawasaki": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "nakano": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "shimizu": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "yokoyama": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "nagata": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "tomita": [
-        "japanese"
+        "japanese",
+        "lastname"
     ],
     "ryouta": [
-        "japanese"
+        "",
+        "firstname",
+        "japanese",
+        "male"
     ],
     "naoki": [
-        "japanese"
+        "",
+        "firstname",
+        "japanese",
+        "male"
     ],
     "kazuki": [
         "japanese"
@@ -958,5 +977,18 @@
         "female",
         "firstname",
         "german"
+    ],
+    "miyamoto": [
+        "japanese",
+        "lastname"
+    ],
+    "akira": [
+        "firstname",
+        "japanese",
+        "male"
+    ],
+    "dai": [
+        "firstname",
+        "japanese"
     ]
 }

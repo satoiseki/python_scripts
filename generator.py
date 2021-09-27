@@ -7,28 +7,36 @@ def init_data(filename):
     if filename != "":
         load_data(filename)
 
-def add_string_to_data(string_to_add):
-    if string_to_add != "":
-        data[string_to_add] = []
+def add_string_to_data(strings_to_add):
+    for name in strings_to_add:
+        if name != "" and data.get(name, None) == None:
+            data[name] = []
 
-def add_tag_to_string(tag_to_add, string_to_use):
-    try:
-        if string_to_use != "":
-            for tag in tag_to_add:
-                data[string_to_use].append(tag)
-    except KeyError:
-        data[string_to_use] = []
-        for tag in tag_to_add:
-            data[string_to_use].append(tag)
+def add_tag_to_string(tags_to_add, strings_to_use):
+    for name in strings_to_use:
+        if name != "":
+            try:
+                for tag in tags_to_add:
+                    if tag != "":
+                        data[name].append(tag)
+            except KeyError as ke:
+                print(ke)
+                add_string_to_data([name])
+                for tag in tags_to_add:
+                    if tag != "":
+                        data[name].append(tag)
 
-def delete_string_from_data(string_to_delete):
-    data.pop(string_to_delete, None)
+def delete_string_from_data(strings_to_delete):
+    for name in strings_to_delete:
+        data.pop(name, None)
 
-def delete_tag_from_string(tag_to_delete, string_to_use):
-    try:
-        data[string_to_use].remove(tag_to_delete)
-    except (KeyError, ValueError):
-        pass
+def delete_tag_from_string(tags_to_delete, strings_to_use):
+    for name in strings_to_use:
+        for tag in tags_to_delete:
+            try:
+                data[name].remove(tag)
+            except (KeyError, ValueError):
+                pass
 
 def save_data(filename):
     if filename != "":
@@ -84,7 +92,9 @@ def init_gui(filename):
         [sg.In(key="input_contains", size=(25,2))],
         [sg.Text("Ends with:")],
         [sg.In(key="input_ends_with", size=(25,2))],
+        [sg.Text("Debug Buttons: ", font=("Arial", 18))],
         [sg.Button('DisplayDB',size=(20,3))],
+        [sg.Button('QuitWithoutSaving',size=(20,3))],
     ]
 
     result_column = [
@@ -130,11 +140,20 @@ def init_gui(filename):
         global event
         global values
         global filename_string
+        global str_dict
+
         event, values = window.read()
-        if event == sg.WIN_CLOSED or event=="Exit":
+
+        if event == sg.WIN_CLOSED:
             save_data(filename_string)
             break
-        elif event == "Generate":
+        elif event == "QuitWithoutSaving":
+            break
+        
+        strings_to_use = values["input_entry"].lower().translate(str_dict).split(',')
+        tags_to_use = values["input_tag"].lower().translate(str_dict).split(',')
+
+        if event == "Generate":
             text = window["textbox"]
             output = get_output()
             text.update(output)
@@ -147,14 +166,13 @@ def init_gui(filename):
             window["selected_db"].update(filename_string)
             load_data(filename_string)
         elif event == "AddEntry":
-            add_string_to_data(values["input_entry"].lower())
+            add_string_to_data(strings_to_use)
         elif event == "DeleteEntry":
-            delete_string_from_data(values["input_entry"].lower())
+            delete_string_from_data(strings_to_use)
         elif event == "AddTag":
-            add_tag_to_string(values["input_tag"].lower().replace(' ', '').split(","), values["input_entry"].lower())
+            add_tag_to_string(tags_to_use, strings_to_use)
         elif event == "DeleteTag":
-            delete_tag_from_string(values["input_tag"].lower(), values["input_entry"].lower())
-
+            delete_tag_from_string(tags_to_use, strings_to_use)
         
     window.close()
     ### END GUI
@@ -225,6 +243,7 @@ def get_output():
 
 ### Definitions
 data = {}
+str_dict = str.maketrans("\n ", ",,")
 filename_string = "E:\programming\github\stuff\generator_db.txt"
 
 try:
